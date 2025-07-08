@@ -144,7 +144,6 @@ export default function Dashboard() {
       try {
         const result = await dispatch(deleteExpenseThunk(id))
         const payload = result.payload as any
-        console.log('Delete response:', payload)
         if (payload?.message) {
           showToast(payload.message, 'success')
         } else if (payload?.data?.message) {
@@ -152,6 +151,10 @@ export default function Dashboard() {
         } else {
           showToast('Expense deleted successfully!', 'success')
         }
+        await dispatch(fetchExpensesThunk(filters))
+        dispatch(fetchTopSpendingDaysThunk())
+        dispatch(fetchMonthlyChangeThunk())
+        dispatch(fetchPredictionThunk())
       } catch (error: any) {
         console.error('Delete error:', error)
         showToast(error?.message || 'Failed to delete expense. Please try again.', 'error')
